@@ -45,7 +45,7 @@ function launchConfetti() {
 }
 
 // Swap for the real photo: put it in /public and change this path e.g. "/wife.jpg"
-const WIFE_PHOTO = "https://picsum.photos/seed/birthday-star/400/400";
+const WIFE_PHOTO = "/public/wife.png";
 
 export default function FinalScreen() {
   const fired = useRef(false);
@@ -85,18 +85,53 @@ export default function FinalScreen() {
         style={{
           width: 160,
           height: 160,
+          position: "relative",
           borderRadius: "50%",
-          overflow: "hidden",
-          border: "5px solid #f472b6",
-          boxShadow: "0 0 0 6px #fce7f3, 0 8px 32px rgba(244,114,182,0.3)",
           flexShrink: 0,
         }}
       >
+        {/* Inner circular frame keeps the photo clipped; outer wrapper allows overlay */}
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            borderRadius: "50%",
+            overflow: "hidden",
+            border: "5px solid #f472b6",
+            boxShadow:
+              "0 0 0 6px #fce7f3, 0 8px 32px rgba(244,114,182,0.3)",
+          }}
+        >
         <img
           src={WIFE_PHOTO}
           alt="Birthday star"
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
+        </div>
+
+        {/* Live favicon badge on the photo frame */}
+        <div
+          style={{
+            position: "absolute",
+            top: -14,
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 2,
+            padding: 4,
+            background: "rgba(255,255,255,0.95)",
+            borderRadius: 999,
+            border: "2px solid #f472b6",
+            boxShadow: "0 6px 18px rgba(0,0,0,0.12)",
+            pointerEvents: "none",
+            userSelect: "none",
+          }}
+        >
+          <img
+            src="/favicon.svg"
+            alt="Birthday clown"
+            style={{ display: "block", width: 28, height: 28 }}
+          />
+        </div>
       </motion.div>
 
       <motion.h1
@@ -165,7 +200,7 @@ export default function FinalScreen() {
             lineHeight: 1.6,
           }}
         >
-          The same Sony A74 camera bag — reach in a little deeper! 📷
+          Your loved one has it!
         </p>
       </motion.div>
 
