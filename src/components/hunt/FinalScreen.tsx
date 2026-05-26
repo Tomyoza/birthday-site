@@ -45,7 +45,7 @@ function launchConfetti() {
 }
 
 // Swap for the real photo: put it in /public and change this path e.g. "/wife.jpg"
-const WIFE_PHOTO = "/public/wife.png";
+const WIFE_PHOTO = "/wife.png";
 
 export default function FinalScreen() {
   const fired = useRef(false);
