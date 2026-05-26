@@ -20,35 +20,59 @@ export default function HuntApp() {
   const [toastVisible, setToastVisible] = useState(false);
   const [soundOn, setSoundOn] = useState(true);
 
-  // Audio assets (place files in /public and keep these paths)
+  // Audio assets
   const bgmRef = useRef<HTMLAudioElement | null>(null);
   const sfxCorrectRef = useRef<HTMLAudioElement | null>(null);
   const sfxWrongRef = useRef<HTMLAudioElement | null>(null);
   const sfxWinRef = useRef<HTMLAudioElement | null>(null);
-  const audioUnlockedRef = useRef(false);
+  const bgmStartedRef = useRef(false);
 
-  const ensureAudioUnlocked = useCallback(() => {
-    if (audioUnlockedRef.current) return;
-    audioUnlockedRef.current = true;
-
-    bgmRef.current = new Audio("/bgm/bgm.mp3");
-    bgmRef.current.loop = true;
-    bgmRef.current.volume = 0.25;
+  // Audioオブジェクトをマウント時に生成し、自動再生を試みる
+  useEffect(() => {
+    const bgm = new Audio("/bgm/bgm.mp3");
+    bgm.loop = true;
+    bgm.volume = 0.25;
+    bgmRef.current = bgm;
 
     sfxCorrectRef.current = new Audio("/bgm/correct_sound.mp3");
     sfxCorrectRef.current.volume = 0.7;
-
     sfxWrongRef.current = new Audio("/bgm/wrong_sound.mp3");
     sfxWrongRef.current.volume = 0.7;
-
     sfxWinRef.current = new Audio("/bgm/win.mp3");
     sfxWinRef.current.volume = 0.8;
+
+    bgm.play().then(() => {
+      bgmStartedRef.current = true;
+    }).catch(() => {
+    });
+
+    return () => {
+      bgm.pause();
+    };
   }, []);
+
+  useEffect(() => {
+    const bgm = bgmRef.current;
+    if (!bgm) return;
+    if (soundOn) {
+      void bgm.play().catch(() => {});
+    } else {
+      bgm.pause();
+    }
+  }, [soundOn]);
+
+  const tryStartBgm = useCallback(() => {
+    if (bgmStartedRef.current || !soundOn) return;
+    const bgm = bgmRef.current;
+    if (!bgm) return;
+    bgm.play().then(() => {
+      bgmStartedRef.current = true;
+    }).catch(() => {});
+  }, [soundOn]);
 
   const playSfx = useCallback(
     (which: "correct" | "wrong" | "win") => {
       if (!soundOn) return;
-      ensureAudioUnlocked();
       const el =
         which === "correct"
           ? sfxCorrectRef.current
@@ -61,29 +85,14 @@ export default function HuntApp() {
       } catch {
         // ignore
       }
-      void el.play().catch(() => {
-        // Autoplay restrictions or missing asset; fail silently.
-      });
+      void el.play().catch(() => {});
     },
-    [ensureAudioUnlocked, soundOn]
+    [soundOn]
   );
 
   const startBgmIfAllowed = useCallback(() => {
-    if (!soundOn) return;
-    ensureAudioUnlocked();
-    const bgm = bgmRef.current;
-    if (!bgm) return;
-    void bgm.play().catch(() => {
-      // Autoplay restrictions or missing asset; fail silently.
-    });
-  }, [ensureAudioUnlocked, soundOn]);
-
-  useEffect(() => {
-    const bgm = bgmRef.current;
-    if (!bgm) return;
-    if (soundOn) startBgmIfAllowed();
-    else bgm.pause();
-  }, [soundOn, startBgmIfAllowed]);
+    tryStartBgm();
+  }, [tryStartBgm]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -141,7 +150,6 @@ export default function HuntApp() {
           whileTap={{ scale: 0.95 }}
           whileHover={{ scale: 1.03 }}
           onClick={() => {
-            ensureAudioUnlocked();
             setSoundOn((v) => {
               const next = !v;
               if (next) startBgmIfAllowed();
