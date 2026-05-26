@@ -32,7 +32,7 @@ export default function HuntApp() {
   useEffect(() => {
     const bgm = new Audio("/bgm/bgm.mp3");
     bgm.loop = true;
-    bgm.volume = 0.25;
+    bgm.volume = 0.1;
     bgmRef.current = bgm;
 
     sfxCorrectRef.current = new Audio("/bgm/correct_sound.mp3");

@@ -216,7 +216,12 @@ export default function FinalScreen() {
       <motion.button
         whileTap={{ scale: 0.93 }}
         whileHover={{ scale: 1.05 }}
-        onClick={launchConfetti}
+        onClick={() => {
+          launchConfetti();
+          const sfx = new Audio("/bgm/hbd_sound.m4a");
+          sfx.volume = 1.0;
+          void sfx.play().catch(() => {});
+        }}
         style={{
           marginTop: 8,
           padding: "14px 36px",

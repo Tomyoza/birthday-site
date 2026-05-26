@@ -15,10 +15,10 @@ const PLACEHOLDER_GRADIENTS = [
 ];
 
 /** 1枚ずつ表示する間隔（ミリ秒） */
-const INTERVAL_MS = 4000;
+const INTERVAL_MS = 7000;
 
-/** フェード時間（秒） */
-const FADE_DURATION = 1.2;
+/** スライド時間（秒） */
+const FADE_DURATION = 1.8;
 
 export default function SlideshowBg() {
   const hasPhotos = SLIDES.length > 0;
@@ -43,12 +43,12 @@ export default function SlideshowBg() {
         overflow: "hidden",
       }}
     >
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         <motion.div
           key={index}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          initial={{ x: "100%" }}
+          animate={{ x: 0 }}
+          exit={{ x: "-100%" }}
           transition={{ duration: FADE_DURATION, ease: "easeInOut" }}
           style={{
             position: "absolute",
