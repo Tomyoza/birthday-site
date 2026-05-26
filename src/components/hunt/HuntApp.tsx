@@ -31,17 +31,17 @@ export default function HuntApp() {
     if (audioUnlockedRef.current) return;
     audioUnlockedRef.current = true;
 
-    bgmRef.current = new Audio("/public/bgm/bgm.mp3");
+    bgmRef.current = new Audio("/bgm/bgm.mp3");
     bgmRef.current.loop = true;
     bgmRef.current.volume = 0.25;
 
-    sfxCorrectRef.current = new Audio("/public/bgm/correct_sound.mp3");
+    sfxCorrectRef.current = new Audio("/bgm/correct_sound.mp3");
     sfxCorrectRef.current.volume = 0.7;
 
-    sfxWrongRef.current = new Audio("/public/bgm/wrong_sound.mp3");
+    sfxWrongRef.current = new Audio("/bgm/wrong_sound.mp3");
     sfxWrongRef.current.volume = 0.7;
 
-    sfxWinRef.current = new Audio("/public/bgm/win.mp3");
+    sfxWinRef.current = new Audio("/bgm/win.mp3");
     sfxWinRef.current.volume = 0.8;
   }, []);
 
