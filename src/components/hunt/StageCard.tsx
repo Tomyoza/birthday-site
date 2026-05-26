@@ -5,11 +5,14 @@ import PasscodeInput from "./PasscodeInput";
 import ProgressBar from "./ProgressBar";
 import PhotoModal from "./PhotoModal";
 
-interface Props {
+export interface StageCardProps {
   stage: Stage;
   currentStage: number;
   totalStages: number;
   onCorrect: (successMessage: string) => void;
+  onWrong?: () => void;
+  onCorrectSfx?: () => void;
+  onInteraction?: () => void;
 }
 
 const EMOJI_BY_TYPE: Record<string, string> = {
@@ -18,15 +21,24 @@ const EMOJI_BY_TYPE: Record<string, string> = {
   final: "🏆",
 };
 
-export default function StageCard({ stage, currentStage, onCorrect }: Props) {
+export default function StageCard({
+  stage,
+  currentStage,
+  onCorrect,
+  onWrong,
+  onCorrectSfx,
+  onInteraction,
+}: StageCardProps) {
   const [shakeKey, setShakeKey] = useState(0);
   const [locked, setLocked] = useState(false);
   const [modal, setModal] = useState<"wrong" | "correct" | null>(null);
 
   const handleSubmit = (value: string) => {
+    onInteraction?.();
     if (value === stage.passcode) {
       setLocked(true);
       setModal("correct");
+      onCorrectSfx?.();
       // Auto-dismiss correct modal and advance after 2s
       setTimeout(() => {
         setModal(null);
@@ -35,6 +47,7 @@ export default function StageCard({ stage, currentStage, onCorrect }: Props) {
     } else {
       setShakeKey((k) => k + 1);
       setModal("wrong");
+      onWrong?.();
     }
   };
 
