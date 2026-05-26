@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const SLIDES: string[] = [
-  '/1.jpeg', '/2.jpeg', '/3.jpeg',
-  '/4.jpeg', '/5.jpeg', '/6.jpeg',
+  '/slides/1.jpeg', '/slides/2.jpeg', '/slides/3.jpeg',
+  '/slides/4.jpeg', '/slides/5.jpeg', '/slides/6.jpeg',
 ];
 
 // 写真なし時のグラデーションプレースホルダー
