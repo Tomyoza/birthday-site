@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
+import SlideshowBg from "./SlideshowBg";
 
 const COLORS = [
   "#f472b6",
@@ -45,7 +46,7 @@ function launchConfetti() {
 }
 
 // Swap for the real photo: put it in /public and change this path e.g. "/wife.jpg"
-const WIFE_PHOTO = "/wife.png";
+const WIFE_PHOTO = "/wife.jpeg";
 
 export default function FinalScreen() {
   const fired = useRef(false);
@@ -58,11 +59,18 @@ export default function FinalScreen() {
   }, []);
 
   return (
+    <>
+      {/* 背景スライドショー（カードの後ろ） */}
+      <SlideshowBg />
+
+      {/* カード本体 — z-index でスライドショーの手前に */}
     <motion.div
       initial={{ opacity: 0, scale: 0.85 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ type: "spring", stiffness: 260, damping: 22, delay: 0.1 }}
       style={{
+        position: "relative",
+        zIndex: 1,
         width: "100%",
         maxWidth: 420,
         margin: "0 auto",
@@ -226,5 +234,6 @@ export default function FinalScreen() {
         🎊 More Confetti!
       </motion.button>
     </motion.div>
+    </>
   );
 }

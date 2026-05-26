@@ -6,8 +6,8 @@ interface Props {
 }
 
 // Swap these paths for real photos: put them in /public and use e.g. "/face-happy.jpg"
-const PHOTO_WRONG = "/wrong.png";
-const PHOTO_CORRECT = "/correct.png";
+const PHOTO_WRONG = "/wrong.jpeg";
+const PHOTO_CORRECT = "/correct.jpeg";
 
 const CONFIG = {
   wrong: {
