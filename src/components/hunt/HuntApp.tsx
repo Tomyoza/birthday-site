@@ -18,6 +18,7 @@ export default function HuntApp() {
   const [finished, setFinished] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastVisible, setToastVisible] = useState(false);
+  const [pendingNext, setPendingNext] = useState<number | "finish" | null>(null);
   const [soundOn, setSoundOn] = useState(true);
 
   // Audio assets
@@ -94,26 +95,34 @@ export default function HuntApp() {
     tryStartBgm();
   }, [tryStartBgm]);
 
+  const TOAST_DURATION = 2800;
+
+  // toastVisible が false になったら pendingNext を実行
+  useEffect(() => {
+    if (toastVisible || pendingNext === null) return;
+    if (pendingNext === "finish") {
+      playSfx("win");
+      setFinished(true);
+    } else {
+      setCurrentStage(pendingNext);
+    }
+    setPendingNext(null);
+  }, [toastVisible, pendingNext, playSfx]);
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setToastVisible(true);
-    setTimeout(() => setToastVisible(false), 2800);
+    setTimeout(() => setToastVisible(false), TOAST_DURATION);
   };
 
   const handleCorrect = useCallback(
     (successMessage: string) => {
       showToast(successMessage);
       const next = currentStage + 1;
-      setTimeout(() => {
-        if (next >= STAGES.length) {
-          playSfx("win");
-          setFinished(true);
-        } else {
-          setCurrentStage(next);
-        }
-      }, 900);
+      // タイマーではなく toastVisible の変化で切り替える
+      setPendingNext(next >= STAGES.length ? "finish" : next);
     },
-    [currentStage, playSfx]
+    [currentStage]
   );
 
   const bg = BG_GRADIENTS[currentStage % BG_GRADIENTS.length];
