@@ -201,7 +201,7 @@ export default function HuntApp() {
       </motion.div>
 
       {/* Main content */}
-      <div style={{ width: "100%", maxWidth: 460 }}>
+      <div style={{ width: "100%", maxWidth: finished ? "100%" : 460 }}>
         <AnimatePresence mode="wait">
           {finished ? (
             <FinalScreen key="final" />
